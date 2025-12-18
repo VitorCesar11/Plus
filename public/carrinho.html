@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEST+ | Meu Carrinho</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/loja.css">
+    <link rel="stylesheet" href="css/carrinho.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="loja.html" class="logo">VEST<span>+</span></a>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="O que você está procurando?">
+                <button class="search-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="header-actions">
+                <a href="login.html" class="login-link" id="loginLink">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span id="userNameDisplay">Entrar / Cadastrar</span>
+                </a>
+                <a href="carrinho.html" class="cart-link active">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+            </div>
+        </div>
+        
+        <nav class="header-nav">
+            <button class="nav-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+                Todas as categorias
+            </button>
+            <a href="loja.html?cat=blusas" class="nav-link">BLUSAS</a>
+            <a href="loja.html?cat=bermudas" class="nav-link">BERMUDAS</a>
+            <a href="loja.html?cat=tenis" class="nav-link">TÊNIS</a>
+            <a href="loja.html?cat=vestidos" class="nav-link">VESTIDOS</a>
+            <a href="loja.html?cat=sapatos" class="nav-link">SAPATOS</a>
+        </nav>
+    </header>
+    
+    
+    <!-- Conteúdo do Carrinho -->
+    <main class="cart-page">
+        <h1>Meu Carrinho</h1>
+        
+        <div class="cart-container">
+            <!-- Lista de itens -->
+            <div class="cart-items" id="cartItems">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Carregando carrinho...</p>
+                </div>
+            </div>
+            
+            <div class="cart-summary" id="cartSummary">
+                <h2>Resumo da compra</h2>
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Frete:</span>
+                    <span id="frete" class="frete-gratis">Grátis</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="total">R$ 0,00</span>
+                </div>
+                <button class="btn-finalizar" id="btnFinalizar">Finalizar compra</button>
+                <a href="loja.html" class="btn-continuar">Escolher mais produtos</a>
+            </div>
+        </div>
+        
+        <!-- Carrinho vazio -->
+        <div class="empty-cart" id="emptyCart" style="display: none;">
+            <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <h2>Seu carrinho está vazio</h2>
+            <p>Adicione produtos ao carrinho para continuar comprando</p>
+            <a href="loja.html" class="btn-shop">Ver produtos</a>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <a href="loja.html" class="logo">VEST<span>+</span></a>
+                <p>Moda que combina com você</p>
+            </div>
+            <div class="footer-section">
+                <h4>Atendimento</h4>
+                <p>contato@vestplus.com.br</p>
+            </div>
+            <div class="footer-section">
+                <h4>Redes Sociais</h4>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">TikTok</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/carrinho.js"></script>
+</body>
+</html>

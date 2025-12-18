@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEST+ | Painel Administrativo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <a href="admin.html" class="logo">VEST<span>+</span></a>
+            
+            <div class="header-actions">
+                <span class="admin-badge">Administrador</span>
+                <a href="login.html" class="header-link" id="logout-btn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">Controle de Estoque</h1>
+        
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="entrada">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+                Entrada de Produtos
+            </button>
+            <button class="tab-btn" data-tab="acerto">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+                Acerto de Estoque
+            </button>
+            <button class="tab-btn" data-tab="inventario">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"></path>
+                    <rect x="9" y="3" width="6" height="4" rx="2"></rect>
+                    <path d="M9 14l2 2 4-4"></path>
+                </svg>
+                Inventário
+            </button>
+        </div>
+
+        <!-- Entrada de Produtos -->
+        <section class="tab-content active" id="tab-entrada">
+            <div class="form-card">
+                <h2 class="form-title">Registrar Entrada de Produto</h2>
+                
+                <form id="form-entrada">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="codigo">Código do Produto *</label>
+                            <input type="text" id="codigo" name="codigo" placeholder="Ex: VEST001" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nome">Nome do Produto *</label>
+                            <input type="text" id="nome" name="nome" placeholder="Ex: Camiseta Básica" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row three-cols">
+                        <div class="form-group">
+                            <label for="categoria">Categoria *</label>
+                            <select id="categoria" name="categoria" required>
+                                <option value="">Selecione...</option>
+                                <option value="blusas">Blusas</option>
+                                <option value="bermudas">Bermudas</option>
+                                <option value="tenis">Tênis</option>
+                                <option value="vestidos">Vestidos</option>
+                                <option value="sapatos">Sapatos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tamanho">Tamanho *</label>
+                            <select id="tamanho" name="tamanho" required>
+                                <option value="">Selecione...</option>
+                                <option value="PP">PP</option>
+                                <option value="P">P</option>
+                                <option value="M">M</option>
+                                <option value="G">G</option>
+                                <option value="GG">GG</option>
+                                <option value="XG">XG</option>
+                                <option value="34">34</option>
+                                <option value="36">36</option>
+                                <option value="38">38</option>
+                                <option value="40">40</option>
+                                <option value="42">42</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cor">Cor *</label>
+                            <input type="text" id="cor" name="cor" placeholder="Ex: Preto" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row three-cols">
+                        <div class="form-group">
+                            <label for="quantidade">Quantidade *</label>
+                            <input type="number" id="quantidade" name="quantidade" placeholder="Ex: 10" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="preco_compra">Preço de Compra (R$) *</label>
+                            <input type="number" id="preco_compra" name="preco_compra" placeholder="Ex: 25.00" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="preco_venda">Preço de Venda (R$) *</label>
+                            <input type="number" id="preco_venda" name="preco_venda" placeholder="Ex: 49.90" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="estoque_minimo">Estoque Mínimo *</label>
+                            <input type="number" id="estoque_minimo" name="estoque_minimo" placeholder="Ex: 5" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="estoque_maximo">Estoque Máximo *</label>
+                            <input type="number" id="estoque_maximo" name="estoque_maximo" placeholder="Ex: 50" min="0" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="descricao">Descrição</label>
+                            <textarea id="descricao" name="descricao" placeholder="Descrição do produto..." rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="imagem">Imagem do Produto</label>
+                            <input type="file" id="imagem" name="imagem" accept="image/*">
+                            <img id="preview-imagem" style="display: none; max-width: 200px; margin-top: 10px; border-radius: 8px;" alt="Preview">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Registrar Entrada
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            Limpar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Acerto de Estoque -->
+        <section class="tab-content" id="tab-acerto">
+            <div class="form-card">
+                <h2 class="form-title">Acerto de Estoque</h2>
+                
+                <form id="form-acerto">
+                    <div class="form-group">
+                        <label for="produto_acerto">Selecione o Produto *</label>
+                        <select id="produto_acerto" name="produto_id" required>
+                            <option value="">Selecione um produto...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="tipo_acerto">Tipo de Acerto *</label>
+                            <select id="tipo_acerto" name="tipo_acerto" required>
+                                <option value="">Selecione...</option>
+                                <option value="entrada">Entrada</option>
+                                <option value="saida">Saída</option>
+                                <option value="ajuste">Ajuste de Inventário</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantidade_acerto">Quantidade *</label>
+                            <input type="number" id="quantidade_acerto" name="quantidade" placeholder="Ex: 5" min="1" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="motivo_acerto">Motivo do Acerto</label>
+                        <textarea id="motivo_acerto" name="motivo" placeholder="Ex: Correção de inventário, perda, devolução..." rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Aplicar Acerto
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Inventário -->
+        <section class="tab-content" id="tab-inventario">
+            <h2 class="section-title">Inventário de Produtos</h2>
+            
+            <div class="inventory-header">
+                <div class="search-filter">
+                    <input type="text" id="busca-produto" placeholder="Buscar produto...">
+                </div>
+                <div class="filters">
+                    <select id="filtro-categoria">
+                        <option value="">Todas as Categorias</option>
+                        <option value="blusas">Blusas</option>
+                        <option value="bermudas">Bermudas</option>
+                        <option value="tenis">Tênis</option>
+                        <option value="vestidos">Vestidos</option>
+                        <option value="sapatos">Sapatos</option>
+                    </select>
+                    <select id="filtro-status">
+                        <option value="">Todos os Status</option>
+                        <option value="critico">Crítico</option>
+                        <option value="baixo">Estoque Baixo</option>
+                        <option value="normal">Normal</option>
+                        <option value="excesso">Excesso</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="status-cards">
+                <div class="status-card critico">
+                    <div class="status-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-number" id="count-critico">0</span>
+                        <span class="status-label">Produtos Críticos</span>
+                    </div>
+                </div>
+                
+                <div class="status-card baixo">
+                    <div class="status-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-number" id="count-baixo">0</span>
+                        <span class="status-label">Estoque Baixo</span>
+                    </div>
+                </div>
+                
+                <div class="status-card normal">
+                    <div class="status-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-number" id="count-normal">0</span>
+                        <span class="status-label">Estoque Normal</span>
+                    </div>
+                </div>
+                
+                <div class="status-card total">
+                    <div class="status-icon">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        </svg>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-number" id="count-total">0</span>
+                        <span class="status-label">Total de Produtos</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-container">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Tamanho</th>
+                            <th>Cor</th>
+                            <th>Estoque Atual</th>
+                            <th>Mín / Máx</th>
+                            <th>Status</th>
+                            <th>Preço Venda</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body">
+                        <!-- Produtos inseridos aqui -->
+                    </tbody>
+                </table>
+                
+                <div class="empty-state" id="empty-inventory">
+                    <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    <p>Nenhum produto cadastrado</p>
+                    <span>Adicione produtos na aba "Entrada de Produtos"</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="modal-editar">
+        <div class="modal-content modal-small">
+            <button class="modal-close" onclick="fecharModal()">&times;</button>
+            <div class="modal-body-form">
+                <h2>Editar produto</h2>
+                
+                <form id="form-editar">
+                    <input type="hidden" id="edit-id" name="id">
+                    
+                    <div class="form-group">
+                        <label for="edit-nome">Nome</label>
+                        <input type="text" id="edit-nome" name="nome" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-preco">Preço</label>
+                        <input type="number" id="edit-preco" name="preco_venda" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-categoria">Categoria</label>
+                        <select id="edit-categoria" name="categoria" required>
+                            <option value="blusas">Blusas</option>
+                            <option value="bermudas">Bermudas</option>
+                            <option value="tenis">Tênis</option>
+                            <option value="vestidos">Vestidos</option>
+                            <option value="sapatos">Sapatos</option>
+                            <option value="calcas">Calças</option>
+                            <option value="casacos">Casacos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-cor">Cor</label>
+                        <input type="text" id="edit-cor" name="cor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-tamanhos">Tamanhos separados por vírgula</label>
+                        <input type="text" id="edit-tamanhos" name="tamanhos" placeholder="PP, P, M, G, GG">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="imagem_edit">Imagem</label>
+                        <input type="file" id="imagem_edit" name="imagem_edit" accept="image/*">
+                        <img id="preview-imagem-edit" style="display: none; max-width: 200px; margin-top: 10px; border-radius: 8px;" alt="Preview">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                        <button type="button" class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>VEST<span style="color: #fbbf24;">+</span></h3>
+                <p>Moda que combina com você</p>
+            </div>
+            <div class="footer-section">
+                <h4>Atendimento</h4>
+                <p>contato@vestplus.com.br</p>
+            </div>
+            <div class="footer-section">
+                <h4>Redes Sociais</h4>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Facebook</a>
+                    <a href="#">TikTok</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 VEST+ - Todos os direitos reservados</p>
+        </div>
+    </footer>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
