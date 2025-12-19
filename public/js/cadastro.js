@@ -65,7 +65,7 @@ document.getElementById("cadastroForm")?.addEventListener("submit", async (e) =>
     showMessage(msg, "Cadastro realizado com sucesso! Redirecionando...", "success")
 
     setTimeout(() => {
-      window.location.href = "login.html"
+      window.location.href = "public/login.html"
     }, 1500)
   } catch {
     showMessage(msg, "Erro de conexão com o servidor.", "error")
