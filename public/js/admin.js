@@ -1,7 +1,7 @@
 let produtos = []
 let produtoEditando = null
 
-// ✅ CORRIGIDO: Removemos o localhost. Agora o site busca a API no próprio endereço.
+
 const API_URL = "/api"
 
 document.addEventListener("DOMContentLoaded", () => {
