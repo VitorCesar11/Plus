@@ -1,4 +1,6 @@
-const API_BASE_URL = "http://localhost:3000"
+// ✅ CORREÇÃO AQUI: Deixamos vazio para funcionar online e localmente
+const API_BASE_URL = ""
+
 let produtoAtual = null
 let tamanhoSelecionado = null
 
@@ -19,11 +21,14 @@ async function loadProduto() {
   if (!id) {
     console.error("Nenhum ID fornecido na URL")
     showError("Produto não encontrado")
-    document.getElementById("loading").style.display = "none"
+    if (document.getElementById("loading")) {
+        document.getElementById("loading").style.display = "none"
+    }
     return
   }
 
   try {
+    // Agora a URL fica relativa: /api/produtos/123
     const apiUrl = `${API_BASE_URL}/api/produtos/${id}`
     console.log("Buscando produto em:", apiUrl)
 
@@ -46,7 +51,9 @@ async function loadProduto() {
   } catch (error) {
     console.error("Erro ao carregar produto:", error)
     showError("Erro ao carregar o produto")
-    document.getElementById("loading").style.display = "none"
+    if (document.getElementById("loading")) {
+        document.getElementById("loading").style.display = "none"
+    }
   }
 }
 
@@ -59,7 +66,7 @@ function renderProduto() {
   container.innerHTML = `
     <div class="product-detail">
       <div class="product-image">
-        <img id="produtoImagem" src="${produtoAtual.imagem_url || "/roupa.jpg"}" alt="${produtoAtual.nome}">
+        <img id="produtoImagem" src="${produtoAtual.imagem_url || "/roupa.jpg"}" alt="${produtoAtual.nome}" onerror="this.src='/roupa.jpg'">
       </div>
       
       <div class="product-info">
@@ -122,6 +129,7 @@ async function loadRelacionados() {
 
     const todosProdutos = await response.json()
 
+    // Filtra produtos da mesma categoria, excluindo o atual
     const relacionados = todosProdutos
       .filter((p) => p.categoria_id === produtoAtual.categoria_id && p.id !== produtoAtual.id)
       .slice(0, 4)
@@ -130,19 +138,21 @@ async function loadRelacionados() {
       const relacionadosContainer = document.getElementById("relatedProducts")
       const relatedSection = document.getElementById("relatedSection")
 
-      relacionadosContainer.innerHTML = relacionados
-        .map(
-          (produto) => `
-        <div class="related-product-card" onclick="window.location.href='produto.html?id=${produto.id}'" style="cursor: pointer;">
-          <img src="${produto.imagem_url || "/roupa.jpg"}" alt="${produto.nome}" onerror="this.src='/roupa.jpg'">
-          <h4>${produto.nome}</h4>
-          <p>R$ ${Number(produto.preco_venda).toFixed(2).replace(".", ",")}</p>
-        </div>
-      `,
-        )
-        .join("")
+      if (relacionadosContainer && relatedSection) {
+          relacionadosContainer.innerHTML = relacionados
+            .map(
+              (produto) => `
+            <div class="related-product-card" onclick="window.location.href='produto.html?id=${produto.id}'" style="cursor: pointer;">
+              <img src="${produto.imagem_url || "/roupa.jpg"}" alt="${produto.nome}" onerror="this.src='/roupa.jpg'">
+              <h4>${produto.nome}</h4>
+              <p>R$ ${Number(produto.preco_venda).toFixed(2).replace(".", ",")}</p>
+            </div>
+          `,
+            )
+            .join("")
 
-      relatedSection.style.display = "block"
+          relatedSection.style.display = "block"
+      }
     }
   } catch (error) {
     console.error("Erro ao carregar produtos relacionados:", error)
@@ -200,6 +210,7 @@ function adicionarAoCarrinho() {
   localStorage.setItem("vestplus_cart", JSON.stringify(carrinho))
 
   updateCartCount()
+  // Dispara evento para atualizar o contador em outras partes da página se necessário
   window.dispatchEvent(new Event("cartUpdated"))
   mostrarToast("Produto adicionado ao carrinho!")
 

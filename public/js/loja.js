@@ -1,4 +1,4 @@
-// ✅ CORREÇÃO AQUI: Deixamos vazio para ele pegar o endereço automático (Render ou Local)
+
 const API_BASE_URL = "" 
 
 let produtos = []
