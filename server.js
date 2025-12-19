@@ -447,7 +447,37 @@ app.get("/criar-tabelas", async (req, res) => {
   }
 });
 // -----------------------------------------------------------------------
+// --- ROTA PARA CRIAR CATEGORIAS (Execute uma vez) ---
+app.get("/criar-categorias", async (req, res) => {
+  try {
+    console.log("Criando categorias...");
+    
+    // Lista fixa de categorias que seu sistema usa
+    const categorias = [
+      { id: 1, nome: "Blusas", slug: "blusas" },
+      { id: 2, nome: "Bermudas", slug: "bermudas" },
+      { id: 3, nome: "Tênis", slug: "tenis" },
+      { id: 4, nome: "Vestidos", slug: "vestidos" },
+      { id: 5, nome: "Sapatos", slug: "sapatos" }
+    ];
 
+    for (const cat of categorias) {
+      await db.query(
+        `INSERT INTO categorias (id, nome, slug) VALUES ($1, $2, $3)
+         ON CONFLICT (id) DO UPDATE SET nome = EXCLUDED.nome`, 
+        [cat.id, cat.nome, cat.slug]
+      );
+    }
+
+    // Ajusta o contador do ID para não dar erro em categorias novas futuras
+    await db.query("SELECT setval('categorias_id_seq', (SELECT MAX(id) FROM categorias))");
+
+    res.send("✅ Categorias (Blusas, Tênis, etc) criadas com sucesso!");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("❌ Erro ao criar categorias: " + err.message);
+  }
+});
 // SERVER
 app.listen(PORT, () => {
   console.log(`✅ Servidor rodando na porta ${PORT}`)
