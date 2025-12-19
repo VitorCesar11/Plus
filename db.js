@@ -1,14 +1,25 @@
-const mysql = require("mysql2/promise")
+const { Pool } = require('pg');
+const config = require('./config');
 
-const pool = mysql.createPool(process.env.MYSQL_URL)
+// Cria a conexão com as configurações do config.js
+const pool = new Pool({
+    user: config.user,
+    host: config.host,
+    database: config.database,
+    password: config.password,
+    port: config.port,
+    ssl: {
+        rejectUnauthorized: false // Obrigatório para conectar no Render
+    }
+});
 
-module.exports = pool
+// Teste de conexão (opcional, mostra no terminal se conectou)
+pool.connect((err, client, release) => {
+    if (err) {
+        return console.error('Erro ao conectar no banco:', err.stack);
+    }
+    console.log('Conexão com PostgreSQL realizada com sucesso!');
+    release();
+});
 
-pool.getConnection()
-  .then(conn => {
-    console.log("✅ MySQL conectado via MYSQL_URL")
-    conn.release()
-  })
-  .catch(err => {
-    console.error("❌ Erro MySQL:", err)
-  })
+module.exports = pool;
