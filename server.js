@@ -74,16 +74,17 @@ app.post("/api/auth/cadastro", async (req, res) => {
       }
     }
 
-    const [emailExiste] = await db.query(
-      "SELECT id FROM usuarios WHERE email = ?",
+    // Postgres: usa { rows } em vez de [rows]
+    const { rows: emailExiste } = await db.query(
+      "SELECT id FROM usuarios WHERE email = $1",
       [email]
     )
     if (emailExiste.length > 0) {
       return res.status(400).json({ erro: "E-mail já cadastrado" })
     }
 
-    const [cpfExiste] = await db.query(
-      "SELECT id FROM usuarios WHERE cpf = ?",
+    const { rows: cpfExiste } = await db.query(
+      "SELECT id FROM usuarios WHERE cpf = $1",
       [cpf]
     )
     if (cpfExiste.length > 0) {
@@ -92,8 +93,9 @@ app.post("/api/auth/cadastro", async (req, res) => {
 
     const senhaHash = await bcrypt.hash(senha, 10)
 
+    // Postgres: usa $1, $2, $3...
     await db.query(
-      "INSERT INTO usuarios (nome, email, senha, cpf, tipo) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO usuarios (nome, email, senha, cpf, tipo) VALUES ($1, $2, $3, $4, $5)",
       [nome, email, senhaHash, cpf, tipo === "admin" ? "admin" : "cliente"]
     )
 
@@ -125,7 +127,8 @@ app.post("/api/auth/login", async (req, res) => {
       })
     }
 
-    const [rows] = await db.query("SELECT * FROM usuarios WHERE email = ?", [email])
+    // Postgres: Busca usuário com $1 e desestrutura { rows }
+    const { rows } = await db.query("SELECT * FROM usuarios WHERE email = $1", [email])
 
     if (rows.length === 0) {
       return res.status(401).json({ erro: "Credenciais inválidas" })
@@ -157,7 +160,7 @@ app.post("/api/auth/login", async (req, res) => {
 // GET PRODUTOS
 app.get("/api/produtos", async (req, res) => {
   try {
-    const [produtos] = await db.query(
+    const { rows: produtos } = await db.query(
       `SELECT p.*, c.nome as categoria_nome 
        FROM produtos p 
        LEFT JOIN categorias c ON p.categoria_id = c.id 
@@ -176,11 +179,11 @@ app.get("/api/produtos/:id", async (req, res) => {
     const { id } = req.params
     console.log("Buscando produto com ID:", id)
 
-    const [produtos] = await db.query(
+    const { rows: produtos } = await db.query(
       `SELECT p.*, c.nome as categoria_nome, c.slug as categoria_slug
        FROM produtos p 
        LEFT JOIN categorias c ON p.categoria_id = c.id 
-       WHERE p.id = ? AND p.ativo = 1`,
+       WHERE p.id = $1 AND p.ativo = 1`,
       [id],
     )
 
@@ -223,7 +226,7 @@ app.post("/api/produtos", verificarToken, async (req, res) => {
     let categoriaFinal = categoria_id || categoria
 
     if (isNaN(categoriaFinal)) {
-      const [cat] = await db.query("SELECT id FROM categorias WHERE nome = ? OR slug = ?", [
+      const { rows: cat } = await db.query("SELECT id FROM categorias WHERE nome = $1 OR slug = $2", [
         String(categoriaFinal).toUpperCase(),
         String(categoriaFinal).toLowerCase(),
       ])
@@ -237,14 +240,15 @@ app.post("/api/produtos", verificarToken, async (req, res) => {
 
     console.log("✅ CATEGORIA FINAL (ID):", categoriaFinal)
 
-    const [result] = await db.query(
+    // Postgres: Adicionado RETURNING id para pegar o ID gerado
+    const result = await db.query(
       `INSERT INTO produtos (
         codigo, nome, categoria_id, tamanhos, cor,
         quantidade, estoque_atual,
         preco_venda, preco_compra,
         estoque_minimo, estoque_maximo,
         descricao, imagem_url, ativo
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id`,
       [
         codigo,
         nome,
@@ -263,11 +267,12 @@ app.post("/api/produtos", verificarToken, async (req, res) => {
       ],
     )
 
-    console.log("PRODUTO CADASTRADO ID:", result.insertId)
+    const newId = result.rows[0].id;
+    console.log("PRODUTO CADASTRADO ID:", newId)
 
     res.json({
       mensagem: "Produto cadastrado com sucesso",
-      id: result.insertId,
+      id: newId,
     })
   } catch (err) {
     console.error("ERRO PRODUTO:", err)
@@ -303,7 +308,7 @@ app.put("/api/produtos/:id", verificarToken, async (req, res) => {
     let categoriaFinal = categoria_id || categoria
 
     if (categoriaFinal && isNaN(categoriaFinal)) {
-      const [cat] = await db.query("SELECT id FROM categorias WHERE nome = ? OR slug = ?", [
+      const { rows: cat } = await db.query("SELECT id FROM categorias WHERE nome = $1 OR slug = $2", [
         String(categoriaFinal).toUpperCase(),
         String(categoriaFinal).toLowerCase(),
       ])
@@ -317,23 +322,24 @@ app.put("/api/produtos/:id", verificarToken, async (req, res) => {
 
     console.log("✅ CATEGORIA FINAL (UPDATE):", categoriaFinal)
 
+    // Postgres: Trocamos ? por $1 até $17 (seguindo a ordem exata do array)
     await db.query(
       `UPDATE produtos SET 
-        codigo = COALESCE(?, codigo),
-        nome = COALESCE(?, nome), 
-        categoria_id = COALESCE(?, categoria_id), 
-        tamanhos = COALESCE(?, tamanhos), 
-        cor = COALESCE(?, cor),
-        quantidade = COALESCE(?, quantidade),
-        estoque_atual = COALESCE(?, estoque_atual),
-        preco_venda = COALESCE(?, preco_venda), 
-        preco_compra = COALESCE(?, preco_compra),
-        estoque_minimo = COALESCE(?, estoque_minimo), 
-        estoque_maximo = COALESCE(?, estoque_maximo),
-        descricao = COALESCE(?, descricao), 
-        imagem_url = COALESCE(?, imagem_url), 
-        ativo = COALESCE(?, ativo)
-      WHERE id = ?`,
+        codigo = COALESCE($1, codigo),
+        nome = COALESCE($2, nome), 
+        categoria_id = COALESCE($3, categoria_id), 
+        tamanhos = COALESCE($4, tamanhos), 
+        cor = COALESCE($5, cor),
+        quantidade = COALESCE($6, quantidade),
+        estoque_atual = COALESCE($7, estoque_atual),
+        preco_venda = COALESCE($8, preco_venda), 
+        preco_compra = COALESCE($9, preco_compra),
+        estoque_minimo = COALESCE($10, estoque_minimo), 
+        estoque_maximo = COALESCE($11, estoque_maximo),
+        descricao = COALESCE($12, descricao), 
+        imagem_url = COALESCE($13, imagem_url), 
+        ativo = COALESCE($14, ativo)
+      WHERE id = $15`,
       [
         codigo,
         nome,
@@ -369,7 +375,8 @@ app.put("/api/produtos/:id", verificarToken, async (req, res) => {
 app.delete("/api/produtos/:id", verificarToken, async (req, res) => {
   try {
     const { id } = req.params
-    await db.query("UPDATE produtos SET ativo = 0 WHERE id = ?", [id])
+    // Postgres: usa $1
+    await db.query("UPDATE produtos SET ativo = 0 WHERE id = $1", [id])
     res.json({ mensagem: "Produto excluído com sucesso" })
   } catch (err) {
     console.error(err)
