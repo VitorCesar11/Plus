@@ -384,6 +384,70 @@ app.delete("/api/produtos/:id", verificarToken, async (req, res) => {
   }
 })
 
+// --- ROTA MÁGICA PARA CRIAR TABELAS (Execute uma vez e depois apague) ---
+app.get("/criar-tabelas", async (req, res) => {
+  try {
+    console.log("Criando tabelas...");
+
+    // 1. Tabela Usuarios
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        senha VARCHAR(255) NOT NULL,
+        cpf VARCHAR(20) UNIQUE,
+        tipo VARCHAR(20) DEFAULT 'cliente'
+      );
+    `);
+
+    // 2. Tabela Categorias
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS categorias (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(255) NOT NULL,
+        slug VARCHAR(255)
+      );
+    `);
+
+    // 3. Tabela Produtos
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS produtos (
+        id SERIAL PRIMARY KEY,
+        codigo VARCHAR(50),
+        nome VARCHAR(255),
+        categoria_id INTEGER REFERENCES categorias(id),
+        tamanhos VARCHAR(255),
+        cor VARCHAR(100),
+        quantidade INTEGER,
+        estoque_atual INTEGER,
+        preco_venda DECIMAL(10,2),
+        preco_compra DECIMAL(10,2),
+        estoque_minimo INTEGER,
+        estoque_maximo INTEGER,
+        descricao TEXT,
+        imagem_url TEXT,
+        ativo INTEGER DEFAULT 1
+      );
+    `);
+
+    // Criar Admin Padrão (Opcional)
+    const senhaHash = await bcrypt.hash("admin123", 10);
+    await db.query(`
+      INSERT INTO usuarios (nome, email, senha, cpf, tipo) 
+      VALUES ($1, $2, $3, $4, $5) 
+      ON CONFLICT (email) DO NOTHING`,
+      ["Admin", "admin@vestplus.com", senhaHash, "000.000.000-00", "admin"]
+    );
+
+    res.send("✅ Tabelas Criadas com Sucesso! Agora pode testar o cadastro.");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("❌ Erro ao criar tabelas: " + err.message);
+  }
+});
+// -----------------------------------------------------------------------
+
 // SERVER
 app.listen(PORT, () => {
   console.log(`✅ Servidor rodando na porta ${PORT}`)
