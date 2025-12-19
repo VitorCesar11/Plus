@@ -1,4 +1,5 @@
-const API_BASE_URL = "http://localhost:3000"
+// ✅ CORREÇÃO AQUI: Deixamos vazio para ele pegar o endereço automático (Render ou Local)
+const API_BASE_URL = "" 
 
 let produtos = []
 let categoriaAtiva = null
@@ -135,30 +136,33 @@ async function carregarProdutos() {
   const loading = document.getElementById("loading")
 
   try {
+    // Isso vai gerar "/api/produtos", funcionando local e online
     const res = await fetch(`${API_BASE_URL}/api/produtos`)
     const data = await res.json()
 
-    loading.style.display = "none"
+    if (loading) loading.style.display = "none"
     produtos = Array.isArray(data) ? data : []
 
     if (produtos.length === 0) {
-      empty.style.display = "block"
-      grid.style.display = "none"
+      if (empty) empty.style.display = "block"
+      if (grid) grid.style.display = "none"
       return
     }
 
-    empty.style.display = "none"
-    grid.style.display = "grid"
+    if (empty) empty.style.display = "none"
+    if (grid) grid.style.display = "grid"
     aplicarFiltrosEOrdenacao()
   } catch (e) {
     console.error("Erro ao carregar produtos:", e)
-    loading.style.display = "none"
-    empty.style.display = "block"
+    if (loading) loading.style.display = "none"
+    if (empty) empty.style.display = "block"
   }
 }
 
 function renderizarProdutos(lista) {
   const grid = document.getElementById("productsGrid")
+  if (!grid) return;
+  
   grid.innerHTML = ""
 
   if (lista.length === 0) {
@@ -177,17 +181,16 @@ function renderizarProdutos(lista) {
 
     card.innerHTML = `
       <img 
-  src="${p.imagem_url || "/roupa.jpg"}"
-  alt="${p.nome}"
-  style="
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    display: block;
-  "
-  onerror="this.src='/roupa.jpg'"
->
-
+        src="${p.imagem_url || "/roupa.jpg"}"
+        alt="${p.nome}"
+        style="
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          display: block;
+        "
+        onerror="this.src='/roupa.jpg'"
+      >
       <h3>${p.nome}</h3>
       <p>${p.categoria_nome || p.categoria}</p>
       <strong>R$ ${Number(p.preco_venda).toFixed(2).replace(".", ",")}</strong>
