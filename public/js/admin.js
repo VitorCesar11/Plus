@@ -1,7 +1,7 @@
 let produtos = []
 let produtoEditando = null
 
-
+// ✅ CORRIGIDO: Removemos o localhost. Agora o site busca a API no próprio endereço.
 const API_URL = "/api"
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -20,7 +20,7 @@ function verificarAuth() {
   const userType = localStorage.getItem("userType")
 
   if (!token || userType !== "admin") {
-    alert("Acesso restrito")
+    // Redireciona para o login se não for admin
     window.location.href = "login.html"
   }
 }
