@@ -21,7 +21,9 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
   }
 
   try {
-    const res = await fetch("http://localhost:3000/api/auth/login", {
+    // ✅ CORREÇÃO AQUI: Removido 'http://localhost:3000'
+    // Agora ele busca automaticamente no servidor correto (Render ou Local)
+    const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -65,7 +67,8 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
         window.location.href = "loja.html"
       }
     }, 800)
-  } catch {
+  } catch (err) { // Adicionei 'err' para ver o erro no console se precisar
+    console.error("Erro no login:", err);
     showMessage(msg, "Erro ao conectar ao servidor. Verifique sua conexão.", "error")
     resetButton(submitBtn, btnText, btnIcon)
   }
